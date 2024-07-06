@@ -21,7 +21,7 @@
 #define GOOD_ICON			-4064
 #define BAD_ICON			-4063
 #define STR_LIST_ID			-4064
-#define PREF_NAME_STR_ID	1
+#define PREF_NAME_STR_ID		1
 
 long gPrevProc = 0;
 long gDelayTicks = 180; // if not configured, default to 3 seconds (180 ticks)
