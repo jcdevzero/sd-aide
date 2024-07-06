@@ -17,7 +17,7 @@
 #include <TextUtils.h>
 #include "prefs.h"
 
-#define INIT_RSRC_ID		-4064
+#define INIT_RSRC_ID			-4064
 #define GOOD_ICON			-4064
 #define BAD_ICON			-4063
 #define STR_LIST_ID			-4064
@@ -222,57 +222,57 @@ static void ReadPreferences()
 
 pascal asm void PatchedPowerManagerOp()
 {
-	move.l		a1, -(sp);			// save a1
-	move.l		a0, -(sp);			// save a0
-	move.l		d1, -(sp);			// save d1
-	jsr			SetUpA4;			// setup a4 world and get old a4 into d0
+	move.l		a1, -(sp);		// save a1
+	move.l		a0, -(sp);		// save a0
+	move.l		d1, -(sp);		// save d1
+	jsr		SetUpA4;		// setup a4 world and get old a4 into d0
 	move.l		gDelayTicks, -(sp);	// save delay in ticks
 	move.l		gPrevProc, -(sp);	// save original trap address
-	move.l		d0, a4;				// restore the original a4 (aka RestoreA4)
-	move.l		(sp)+, a1;			// load original trap address (gPrevProc) into a1
-	move.l		(sp)+, d0;			// load delay (gDelayTicks) into d0
-	move.l		(sp)+, d1;			// restore d1
-	move.l		(sp)+, a0;			// restore a0
-	move.l		d0, -(sp);			// save delay (gDelayTicks) for later
+	move.l		d0, a4;			// restore the original a4 (aka RestoreA4)
+	move.l		(sp)+, a1;		// load original trap address (gPrevProc) into a1
+	move.l		(sp)+, d0;		// load delay (gDelayTicks) into d0
+	move.l		(sp)+, d1;		// restore d1
+	move.l		(sp)+, a0;		// restore a0
+	move.l		d0, -(sp);		// save delay (gDelayTicks) for later
 	move.l		%0x0, -(sp);		// save shouldDelay (0 = no) for later
 
-	move.w		(a0), d0;			// copy pmCommand (in a0) into d0
+	move.w		(a0), d0;		// copy pmCommand (in a0) into d0
 	cmpi.w		%0x0010, d0;		// check if pmCommand is 0x0010 (powerCntl)
-	bne.s		@doDefault;			// skip if it's not
+	bne.s		@doDefault;		// skip if it's not
 	
-	move.b		12(a0), d0;			// copy pmData (first byte) into d0
-	cmpi.b		%0x84, d0;			// check if pmData is 0x84 (hdOn)
-	bne.s		@doDefault;			// skip if it's not
+	move.b		12(a0), d0;		// copy pmData (first byte) into d0
+	cmpi.b		%0x84, d0;		// check if pmData is 0x84 (hdOn)
+	bne.s		@doDefault;		// skip if it's not
 	
-	move.l		(sp)+, d0;			// pop off the default shouldDelay (0 = no)
+	move.l		(sp)+, d0;		// pop off the default shouldDelay (0 = no)
 	move.l		%0x1, -(sp);		// save shouldDelay (1 = yes) for later
 
 @doDefault:
-	jsr			(a1);				// jump to the original trap
+	jsr		(a1);			// jump to the original trap
 
 @shouldDelayBeforeReturning:
-	exg.l		d0, a1;				// save d0 (original trap result) into a1
-	move.l		(sp)+, d0;			// load shouldDelay into d0
-	cmpi.l		%0x1, d0;			// check if we should delay or not
-	exg.l		d0, a1;				// load d0 (original trap result)
-	move.l		(sp)+, a1;			// load delay (gDelayTicks) into a1
-	bne.s		@done;				// if we do not need to delay, go to the end
+	exg.l		d0, a1;			// save d0 (original trap result) into a1
+	move.l		(sp)+, d0;		// load shouldDelay into d0
+	cmpi.l		%0x1, d0;		// check if we should delay or not
+	exg.l		d0, a1;			// load d0 (original trap result)
+	move.l		(sp)+, a1;		// load delay (gDelayTicks) into a1
+	bne.s		@done;			// if we do not need to delay, go to the end
 
 @checkDelayIsZero:
-	exg.l		d0, a1;				// save d0 into a1, and put delay (gDelayTicks) into d0
-	cmpi.l		%0x0, d0;			// check if the delay (gDelayTicks) is 0
-	exg.l		d0, a1;				// restore d0
-	beq.s		@done;				// if delay (gDelayTicks) is zero, go to the end
+	exg.l		d0, a1;			// save d0 into a1, and put delay (gDelayTicks) into d0
+	cmpi.l		%0x0, d0;		// check if the delay (gDelayTicks) is 0
+	exg.l		d0, a1;			// restore d0
+	beq.s		@done;			// if delay (gDelayTicks) is zero, go to the end
 
 @doDelay:
-	move.l		a0, -(sp);			// save a0
-	move.l		d0, -(sp);			// save d0
-	move.l		a1, a0;				// put delay (gDelayTicks) into a0
-	_Delay;							// call the delay
-	move.l		(sp)+, d0;			// restore d0
-	move.l		(sp)+, a0;			// restore a0
+	move.l		a0, -(sp);		// save a0
+	move.l		d0, -(sp);		// save d0
+	move.l		a1, a0;			// put delay (gDelayTicks) into a0
+	_Delay;					// call the delay
+	move.l		(sp)+, d0;		// restore d0
+	move.l		(sp)+, a0;		// restore a0
 
 @done:
-	move.l		(sp)+, a1;			// restore a1
+	move.l		(sp)+, a1;		// restore a1
 	rts;
 }

@@ -22,11 +22,11 @@
 
 #define CURAPNAME_LM		0x910
 #define SHOW_INIT_TABLE		((unsigned short*)(CURAPNAME_LM + 32 - 4))
-#define CHECKSUM			0x1021
-#define X_OFFSET			40
-#define Y_OFFSET			40
-#define X_INITIAL			8
-#define ICON_WIDTH			32
+#define CHECKSUM		0x1021
+#define X_OFFSET		40
+#define Y_OFFSET		40
+#define X_INITIAL		8
+#define ICON_WIDTH		32
 
 #pragma options align=mac68k
 typedef struct {
